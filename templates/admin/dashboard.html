@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Admin dashboard{% endblock %}
+{% block content %}
+<h1>Admin</h1>
+<p class="sub">Overview only. Account and subject management comes in a later phase.</p>
+<div class="grid">
+  <div class="panel"><div class="figure">{{ counts.students }}<small>students</small></div></div>
+  <div class="panel"><div class="figure">{{ counts.faculty }}<small>faculty</small></div></div>
+  <div class="panel"><div class="figure">{{ counts.subjects }}<small>subjects</small></div></div>
+  <div class="panel"><div class="figure">{{ counts.pending_leaves }}<small>pending leave requests</small></div></div>
+</div>
+{% endblock %}

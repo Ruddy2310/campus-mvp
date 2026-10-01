@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Student signup{% endblock %}
+{% block content %}
+<div class="panel narrow">
+  <h1>Student signup</h1>
+  <form method="post">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <label for="name">Full name</label>
+    <input id="name" name="name" type="text" maxlength="100" required>
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" maxlength="150" required>
+    <label for="roll_no">Roll number</label>
+    <input id="roll_no" name="roll_no" type="text" maxlength="30" required>
+    <label for="class_name">Class</label>
+    <input id="class_name" name="class_name" type="text" maxlength="50" required>
+    <label for="password">Password (8+ characters)</label>
+    <input id="password" name="password" type="password" minlength="8" required>
+    <p><button>Create account</button></p>
+  </form>
+  <p class="meta">Already registered? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+</div>
+{% endblock %}

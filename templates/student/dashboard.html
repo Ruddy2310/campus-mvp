@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Student dashboard{% endblock %}
+{% block content %}
+<h1>{{ g.user.name }}</h1>
+<p class="sub">Roll no {{ profile.roll_no }}, class {{ profile.class_name }}</p>
+<div class="grid">
+  <div class="panel">
+    <h2>My subjects</h2>
+    {% if subjects %}<ul class="plain">{% for s in subjects %}<li>{{ s.code }} - {{ s.name }}</li>{% endfor %}</ul>
+    {% else %}<p class="empty">You are not enrolled in any subject yet.</p>{% endif %}
+  </div>
+  <div class="panel">
+    <h2>Recent notices</h2>
+    {% if notices %}<ul class="plain">{% for n in notices %}<li>{{ n.title }}<div class="meta">{{ n.published_at }}</div></li>{% endfor %}</ul>
+    {% else %}<p class="empty">No notices yet.</p>{% endif %}
+  </div>
+</div>
+<div class="panel">
+  <h2>Apply for leave</h2>
+  <form method="post" action="{{ url_for('student.apply_leave') }}">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <label for="from_date">From</label><input id="from_date" name="from_date" type="date" required>
+    <label for="to_date">To</label><input id="to_date" name="to_date" type="date" required>
+    <label for="reason">Reason</label><textarea id="reason" name="reason" maxlength="500" required></textarea>
+    <p><button>Send leave request</button></p>
+  </form>
+</div>
+<div class="panel">
+  <h2>My leave requests</h2>
+  {% if leaves %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Dates</th><th>Reason</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for lr in leaves %}
+      <tr><td>{{ lr.from_date }} to {{ lr.to_date }}</td><td>{{ lr.reason }}</td>
+      <td><span class="tag {{ 'ok' if lr.status == 'approved' else 'bad' if lr.status == 'rejected' else 'warn' }}">{{ lr.status|capitalize }}</span></td></tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}<p class="empty">You have not applied for leave.</p>{% endif %}
+</div>
+{% endblock %}

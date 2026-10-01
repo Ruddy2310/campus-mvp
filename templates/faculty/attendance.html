@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Attendance {{ subject.code }}{% endblock %}
+{% block content %}
+<h1>{{ subject.code }} - {{ subject.name }}</h1>
+<p class="sub">Attendance for {{ today }}</p>
+<div class="panel">
+  {% if roster %}
+  <form method="post">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <div class="table-wrap"><table>
+      <thead><tr><th>Roll no</th><th>Name</th><th>Status</th></tr></thead>
+      <tbody>
+      {% for s in roster %}
+        <tr>
+          <td>{{ s.roll_no }}</td><td>{{ s.name }}</td>
+          <td><div class="radio-row">
+            <label><input type="radio" name="status_{{ s.id }}" value="present" {{ 'checked' if current.get(s.id, 'present') == 'present' }}> Present</label>
+            <label><input type="radio" name="status_{{ s.id }}" value="absent" {{ 'checked' if current.get(s.id) == 'absent' }}> Absent</label>
+          </div></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    <p><button>Save attendance</button> <a class="btn secondary" href="{{ url_for('faculty.dashboard') }}">Cancel</a></p>
+  </form>
+  {% else %}<p class="empty">No students are enrolled in this subject.</p>{% endif %}
+</div>
+{% endblock %}

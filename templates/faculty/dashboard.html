@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Faculty dashboard{% endblock %}
+{% block content %}
+<h1>{{ g.user.name }}</h1>
+<p class="sub">{{ profile.department }} department. This page shows only your own classes and campus-published notices.</p>
+
+<div class="actions">
+  <a class="btn" href="{{ url_for('faculty.attendance_index') }}">Mark attendance</a>
+  <a class="btn secondary" href="{{ url_for('faculty.students') }}">View assigned students</a>
+  <a class="btn secondary" href="{{ url_for('faculty.leaves') }}">Review leave requests</a>
+  <a class="btn secondary" href="{{ url_for('faculty.notice_new') }}">Create notice</a>
+  <a class="btn secondary" href="{{ url_for('faculty.notices') }}">View published notices</a>
+</div>
+
+<div class="grid">
+  <div class="panel"><div class="figure">{{ student_count }}<small>students in your subjects</small></div></div>
+  <div class="panel"><div class="figure">{{ pending_leave_total }}<small>leave requests waiting for review</small></div></div>
+</div>
+
+<div class="panel">
+  <h2>Today's attendance</h2>
+  {% if attendance_today %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Subject</th><th>Present</th><th>Absent</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for row in attendance_today %}
+      <tr>
+        <td>{{ row.code }} - {{ row.name }}</td>
+        <td>{{ row.present if row.session_id else '-' }}</td>
+        <td>{{ row.absent if row.session_id else '-' }}</td>
+        <td>{% if row.session_id %}<span class="tag ok">Marked</span>{% else %}<span class="tag warn">Not marked</span>{% endif %}</td>
+        <td><a href="{{ url_for('faculty.attendance', subject_id=row.subject_id) }}">{{ 'Edit' if row.session_id else 'Mark now' }}</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}<p class="empty">No subjects are assigned to you yet. Ask the admin to assign them.</p>{% endif %}
+</div>
+
+<div class="panel">
+  <h2>Leave requests to review</h2>
+  {% if pending_leaves %}
+  <ul class="plain">
+    {% for lr in pending_leaves %}
+    <li>{{ lr.student_name }} ({{ lr.roll_no }}) - {{ lr.from_date }} to {{ lr.to_date }}<div class="meta">{{ lr.reason }}</div></li>
+    {% endfor %}
+  </ul>
+  {% if pending_leave_total > pending_leaves|length %}<p><a href="{{ url_for('faculty.leaves') }}">See all {{ pending_leave_total }}</a></p>{% endif %}
+  {% else %}<p class="empty">Nothing waiting for you.</p>{% endif %}
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <h2>Recent notices</h2>
+    {% if published %}
+    <ul class="plain">
+      {% for n in published %}
+      <li><a href="{{ url_for('faculty.notice_detail', notice_id=n.id) }}">{{ n.title }}</a><div class="meta">{{ n.author }}, {{ n.published_at }}</div></li>
+      {% endfor %}
+    </ul>
+    {% else %}<p class="empty">No notices have been published.</p>{% endif %}
+  </div>
+  <div class="panel">
+    <h2>My drafts</h2>
+    {% if my_drafts %}
+    <ul class="plain">
+      {% for n in my_drafts %}
+      <li><a href="{{ url_for('faculty.notice_edit', notice_id=n.id) }}">{{ n.title }}</a><div class="meta">Saved {{ n.created_at }}</div></li>
+      {% endfor %}
+    </ul>
+    {% else %}<p class="empty">You have no drafts.</p>{% endif %}
+  </div>
+</div>
+{% endblock %}

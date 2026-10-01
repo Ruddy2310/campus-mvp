@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Mark attendance{% endblock %}
+{% block content %}
+<h1>Mark attendance</h1>
+<p class="sub">Choose one of your subjects. Attendance is saved for today.</p>
+<div class="panel">
+  {% if subjects %}
+  <ul class="plain">
+    {% for s in subjects %}
+    <li><a href="{{ url_for('faculty.attendance', subject_id=s.id) }}">{{ s.code }} - {{ s.name }}</a></li>
+    {% endfor %}
+  </ul>
+  {% else %}<p class="empty">No subjects are assigned to you yet.</p>{% endif %}
+</div>
+{% endblock %}

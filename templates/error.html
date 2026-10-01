@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ error.code }}{% endblock %}
+{% block content %}
+<div class="panel narrow">
+  <h1>{{ error.code }} - {{ error.name }}</h1>
+  <p class="sub">
+    {% if error.code == 403 %}You do not have permission to do that.
+    {% elif error.code == 404 %}That page does not exist, or it is not yours to see.
+    {% else %}{{ error.description }}{% endif %}
+  </p>
+  <a class="btn secondary" href="{{ url_for('index') }}">Back to my dashboard</a>
+</div>
+{% endblock %}

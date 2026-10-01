@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ notice.title }}{% endblock %}
+{% block content %}
+<h1>{{ notice.title }}</h1>
+<p class="sub">{{ notice.author }}{% if notice.published_at %}, {{ notice.published_at }}{% else %} (draft){% endif %}</p>
+<div class="panel"><div class="notice-body">{{ notice.body }}</div></div>
+<p>
+  {% if notice.status == 'draft' and notice.created_by == g.user.id %}
+    <a class="btn" href="{{ url_for('faculty.notice_edit', notice_id=notice.id) }}">Edit draft</a>
+  {% endif %}
+  <a class="btn secondary" href="{{ url_for('faculty.notices') }}">Back to notices</a>
+</p>
+{% endblock %}

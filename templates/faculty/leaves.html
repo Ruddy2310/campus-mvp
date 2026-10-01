@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Leave requests{% endblock %}
+{% block content %}
+<h1>Leave requests</h1>
+<p class="sub">Pending requests from students in your subjects. The first review is final.</p>
+<div class="panel">
+  {% if leaves %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Student</th><th>Dates</th><th>Reason</th><th></th></tr></thead>
+    <tbody>
+    {% for lr in leaves %}
+      <tr>
+        <td>{{ lr.student_name }}<div class="meta">{{ lr.roll_no }}</div></td>
+        <td>{{ lr.from_date }} to {{ lr.to_date }}</td>
+        <td>{{ lr.reason }}</td>
+        <td>
+          <form method="post" action="{{ url_for('faculty.review_leave', leave_id=lr.id) }}" class="inline">
+            <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+            <button name="action" value="approve">Approve</button>
+            <button name="action" value="reject" class="danger">Reject</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}<p class="empty">No pending leave requests.</p>{% endif %}
+</div>
+{% endblock %}
